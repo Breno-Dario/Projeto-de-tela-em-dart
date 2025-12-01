@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import './botoes.dart';
 
 void main() {
   runApp(const PerguntasApp());
@@ -8,13 +8,9 @@ void main() {
 class PerguntasApp extends StatelessWidget {
   const PerguntasApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Home(),
-    );
+    return MaterialApp(home: Home());
   }
 }
 
@@ -22,55 +18,58 @@ class Home extends StatefulWidget {
   const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
+  final perguntas = [
+    {
+      'pergunta': 'Qual a sua cor favorita?',
+      'respostas': ['Vermelho', 'Verde', 'Azul', 'Amarelo', 'Preto'],
+    },
+    {
+      'pergunta': 'Qual o seu animal favorito?',
+      'respostas': ['Cachorro', 'Gato', 'Coelho', 'Porco', 'Ornitorrinco'],
+    },
+    {
+      'pergunta': 'Qual é o seu time?',
+      'respostas': ['Flamengo', 'Palmeiras', 'São Paulo', 'Santos', 'Corinthians'],
+    },
+  ];
+
+  var indicePergunta = 0;
+
+  void responder() {
+    setState(() {
+      indicePergunta =
+          (indicePergunta + 1) % perguntas.length; // troca automaticamente
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Perguntas 01"),
-          centerTitle: true,
+      appBar: AppBar(
+        title: const Text('Breno Dario', style: TextStyle(fontSize: 30), selectionColor: Colors.white,),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 206, 24, 49),
+        foregroundColor: Colors.white,
+        toolbarHeight: 80,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Text(
+              perguntas[indicePergunta]['pergunta'].toString(),
+              style: const TextStyle(fontSize: 30),
+            ),
+           ...((perguntas[indicePergunta]['respostas'] as List<String>)
+           .map((textBotao) => Botoes(resp: responder, txt: textBotao))
+           .toList()),
+          ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Perguntas ?"),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(10),
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {},
-                child: const Text("Resposta 01"),
-              ),
-              const SizedBox(height: 5),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(10),
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {},
-                child: const Text("Resposta 02"),
-              ),
-              const SizedBox(height: 5),
-               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(10),
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () {},
-                child: const Text("Resposta 03"),
-              ),
-            ],
-          ),
-        ),
+      ),
     );
   }
 }
